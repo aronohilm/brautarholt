@@ -1,0 +1,312 @@
+import { createContext, useContext, useState } from 'react'
+
+const translations = {
+  is: {
+    nav: {
+      course: 'Völlurinn', rankings: 'Verðlaun', midnight: 'Miðnætursgolf',
+      membership: 'Aðild', fees: 'Gjaldskrá', bookNow: 'Bóka tíma',
+      courseGuide: 'Leiðarvísir',
+    },
+    hero: {
+      tag: 'N 64°14′ · Kjalarnes · Ísland · Est. 2011',
+      words: ['Hafið,', 'ljósið,', 'og', 'átján', 'holur.'],
+      sub: 'Golfklúbbur Brautarholt — 18 hola strandbrekkulönd á ytri enda Kjalarness, þar sem landið endar og Norður-Atlantshaf hefst.',
+      cta1: 'Bóka tíma', cta2: 'Skoða völlinn', scroll: 'Skruna',
+      stats: [
+        { n: '#62', l: 'Heimsröðun · Golfscape' },
+        { n: '#61', l: 'Evrópa · GolfWorld' },
+        { n: '18', l: 'Holur · Kjalarnes' },
+      ],
+    },
+    marquee: ['Strandbrekkulönd · Kjalarnes', 'Est. 2011', '#62 Heimurinn · Golfscape', 'Miðnætursgolf 1. jún–20. júl', 'Opið 09–22', '18 holur við Norður-Atlantshaf', '#61 Evrópa · GolfWorld', '162 Reykjavík'],
+    about: {
+      eyebrow: '02 · Völlurinn',
+      h2: 'Þar sem land', h2em: 'endar.',
+      p1: 'Stofnað 2011 og opnað seint í júlí 2012, var Brautarholt byggt á ytri enda Kjalarness — höfða sem nær út í Faxaflóa — með Reykjavíkurborg yfir vatnið og haf á þremur hliðum.',
+      p2: 'Þetta er, á öllum sviðum, strandbrekkulönd. Hamrabakkarnir, víkurnar, vindraskaðar brautir, hraunið. Norður-Atlantshaf er aldrei sjónum dulinn.',
+      metaRows: [
+        { k: 'Stofnað', v: '2011', s: 'Opnað seint í júlí 2012' },
+        { k: 'Heimilisfang', v: 'Brautarholt 1', s: 'Kjalarnes · 162 Reykjavík' },
+        { k: 'Sími', v: '566 6045', s: 'Mán–Sun · 09:00 – 22:00' },
+        { k: 'Tímabil', v: 'Maí – September', s: 'Miðnætursgolf · 1. jún – 20. júl' },
+      ],
+      caption: '/ Hamrabrekka · Brautarholt · Kjalarnes · Ísland',
+    },
+    architects: {
+      eyebrow: '03 · Hönnun',
+      h2: 'Mótað af', h2em: 'þremur höndum.',
+      cards: [
+        { no: 'A / 01', name: 'Edwin', it: ' Roald', desc: 'Hannaði grunn skipulagið — grunninn að leiðbeiningum Brautarholts yfir 18 holur yfir Kjalarnes.' },
+        { no: 'A / 02', name: 'Michael', it: ' Kelly', desc: 'Mótaði landslag á fyrstu 11 holunum, skar völlinn inn í hamrabrúnirnar og útlínur gagnvart hafinu.' },
+        { no: 'A / 03', name: 'Tony', it: ' Ristola', desc: 'Hannaði síðustu 7 holurnar — lokaferðin þar sem völlurinn snýr aftur til sjávar og ljósið helst lengst.' },
+      ],
+    },
+    photoBanner: {
+      h2a: 'Völlur þar sem', h2em: 'hamrabrúnin er hindrunin.',
+      p: 'Hannaður af þremur hönnuðum — Edwin Roald, Michael Kelly og Tony Ristola — sem sitthvoru setti mark sitt á landið.',
+    },
+    awards: {
+      eyebrow: '04 · Viðurkenningar',
+      h2a: 'Hljóðlega meðal', h2em: 'bestu heims.',
+      card1: { src: 'Golfscape · Heimsröðun', denom: 'Meðal beztu golfvalla', denomem: 'í heiminum.', foot: 'Heimstopp 100 · Golfscape International' },
+      card2: { src: 'GolfWorld · Meginland Evrópa', denom: 'Meðal beztu valla í', denomem: 'Evrópu.', foot: 'Evróputopp 100 · GolfWorld Magazine' },
+    },
+    gallery: {
+      eyebrow: '05 · Völlurinn í myndum',
+      h2: 'Átján holur við', h2em: 'brún jarðar.',
+      captions: ['/ Loftmynd í sólsetur · Kjalarnesið', '/ Hamrabrekka · Norður-Atlantshaf að baki', '/ Miðvöllurinn · Reykjavík yfir Faxaflóa'],
+    },
+    location: {
+      eyebrow: '06 · Leiðbeiningar',
+      h2: 'Á ytri enda', h2em: 'Kjalarness.',
+      body: 'Beygðu af Vesturlandsvegi við Grundarhverfi og haltu áfram út á höfðann. Vegurinn þrengist. Himininn opnast. Völlurinn birtist í enda landsins.',
+      detail1k: 'Með bíl frá Reykjavík',
+      detail1v: '30 mínútur norður — Vesturlandsvegur, beygja við Grundarhverfi, síðan merkingar að Brautarholti 1.',
+      detail2k: 'Hnit',
+    },
+    hours: [
+      { k: 'Tímabil', big: 'Maí', big2: '– Sept', note: 'Fimm heilar mánuðir af strandbrekkulandi, frá vorlokum til byrjunar hausts.' },
+      { k: 'Opnunartímar', big: '09:00', big2: '– 22:00', note: 'Opið alla daga á tímabilinu. Strandarnir eru ljósir.' },
+      { k: 'Ástæða', big: 'Sjávar', big2: ' brík', note: 'Strandlegar aðstæður halda tímabilinu lengra opnu en flestir Íslenzkir vellir.' },
+    ],
+    midnight: {
+      eyebrow: '07 · Miðnætursgolf',
+      h2a: 'Berjast eftir', h2em: 'miðnætti.',
+      sub: 'Í sjö vikur á sumri gleymir sólin Íslands að setjast — og þú getur spilað heila hringjur undir himni sem myrkvar aldrei að fullu.',
+      facts: [
+        '1. júní til 20. júlí — gluggi miðnætursgolfsins.',
+        'Í upphafi og enda tímabilsins, dimmir skömmu eftir miðnætti.',
+        'Í miðjum júlí getur þú spilað lengur inn á nóttina — ljósið helst.',
+        'Skýjað veður gerir það myrkara fyrr; tær himininn lengir dagljósið.',
+        'Klæðstu hlýtt — það kólnar á höfðanum seint á kvöldin.',
+        'Við mælum með byrjun klukkan 21:00 og lok rétt eftir miðnætti.',
+      ],
+      cta: 'Panta miðnæturshringjur',
+    },
+    membership: {
+      eyebrow: '08 · Aðild',
+      h2: 'Fjórar leiðir til að', h2em: 'tilheyra.',
+      note: 'Hvert stig felur í sér GSÍ-aðild og fullan aðgang að völlinum allt sumarið, frá 1. maí til 30. september.',
+      tiers: [
+        { name: 'Rauð', it: ' aðild', tag: 'Grunnur · 5 hringjur', price: '53.900', inc: '5 hringjur kort & GSÍ aðild.' },
+        { name: 'Græn', it: ' aðild', tag: 'Miðjan · 10 hringjur', price: '89.900', inc: '10 hringjur kort & GSÍ aðild.' },
+        { name: 'Blá', it: ' aðild', tag: 'Premium · 15 hringjur', price: '124.300', inc: '15 hringjur kort & GSÍ aðild.' },
+        { name: 'Full', it: ' aðild', tag: 'Ótakmarkaðar hringjur', price: '210.000', inc: 'Ótakmarkaðar hringjur allt sumarið. Spilað eins oft og þér líkar.', feat: true },
+      ],
+      joinNow: 'Ganga í klúbb', unit: 'ISK · Á ári',
+    },
+    fees: {
+      eyebrow: '09 · Gestir',
+      h2: 'Spilaðu', h2em: 'dag.',
+      note: 'Vallargjald, kerrur, kylfur og golfbílar — allt sem þú þarft til að stíga á fyrstu tee á Kjalarnesströndinni.',
+      cta: 'Bóka á netinu',
+      rows: [
+        { n: 'F1', nm: 'Vallargjald 18 holur', en: 'Green fee · 18 holur', pr: '15.800' },
+        { n: 'F2', nm: 'Vallargjald 12 holur', en: 'Green fee · 12 holur', pr: '12.900' },
+        { n: 'F3', nm: 'Kylfur', en: 'Club rental', pr: '7.000' },
+        { n: 'F4', nm: 'Golfbíll 9 holur', en: 'Golf cart · 9 holur', pr: '6.500' },
+        { n: 'F5', nm: 'Golfbíll 18 holur', en: 'Golf cart · 18 holur', pr: '9.500' },
+        { n: 'F6', nm: 'Kerrur', en: 'Pull trolley', pr: '2.000' },
+      ],
+    },
+    signatureHole: {
+      eyebrow: '10 · Signaturholan',
+      holeNum: '01', holeTitle: 'Hola 1 —', holeTitleEm: 'Upphafið',
+      statLabels: { par: 'Par', hcp: 'HCP', yds: 'Metrar' },
+      desc: 'Miðaðu á miðju fairway, stutt af þremur fairway-bunkerum. Vertu ekki freistuð af skammhlaupi á öðrum skotinu — ef þú ert stuttur, leggðu næsta skot niður undir brekku. Hlaupið spilar til vinstri og nýtir náttúrulegar útlínur til að fæða boltann að pinnanum.',
+      navRow: ['Hola 01', 'Hola 02 →', 'Allar 18 →'],
+    },
+    finalCta: {
+      eyebrow: '11 · Komðu og spilaðu',
+      h2a: 'Spilaðu við', h2em: 'Norður-Atlantshaf.',
+      sub: 'Upplifðu eitt af merkilegustu strandbrekkulöndum Evrópu — opið alla daga frá 1. maí til 30. september. Miðnæturshringjur frá 1. júní til 20. júlí.',
+      cta1: 'Bóka tíma', cta2: 'Skoða aðild', cta3: 'Hringja 566 6045',
+    },
+    footer: {
+      desc: 'Strand-18 holna brautir á ytri enda Kjalarness, opnar árlega frá 1. maí til 30. september.',
+      visit: { title: 'Heimsókn', lines: ['Brautarholt 1', 'Kjalarnes', '162 Reykjavík', 'Ísland'] },
+      contact: { title: 'Samband', lines: ['566 6045', 'info@brautarholt.is', '09:00 – 22:00 alla daga'] },
+      explore: { title: 'Skoða', links: [['Völlurinn', '#about'], ['Miðnætursgolf', '#midnight'], ['Aðild', '#membership'], ['Gjaldskrá', '#fees']] },
+      copy: '© Golfklúbbur Brautarholt · {year}',
+      coords: 'N 64°14′ · W 21°49′',
+      est: 'Est. 2011 · Kjalarnes · Ísland',
+    },
+    booking: {
+      title: 'Bóka þinn', titleEm: 'tíma.',
+      tag: 'N 64°14′ · Brautarholt, Kjalarnes',
+      dateLabel: 'Dagsetning',
+      playersLabel: 'Leikmenn',
+      playerOptions: ['1 leikmaður', '2 leikmenn', '3 leikmenn', '4 leikmenn'],
+      teeLabel: 'Tímasetning',
+      holesLabel: 'Holur',
+      holeOptions: ['18 holur', '12 holur', '9 holur'],
+      nameLabel: 'Nafn',
+      contactLabel: 'Símanúmer eða netfang',
+      contactPlaceholder: '566 6045 eða netfang',
+      submit: 'Staðfesta bókun',
+      note: 'Eða hringja beint · 566 6045 · 09:00 – 22:00',
+    },
+  },
+
+  en: {
+    nav: {
+      course: 'Course', rankings: 'Rankings', midnight: 'Midnight',
+      membership: 'Membership', fees: 'Fees', bookNow: 'Book Tee Time',
+      courseGuide: 'Course Guide',
+    },
+    hero: {
+      tag: 'N 64°14′ · Kjalarnes · Iceland · Est. 2011',
+      words: ['The', 'sea,', 'the', 'light,', 'and', 'eighteen', 'holes.'],
+      sub: 'Golfklúbbur Brautarholt — a coastal 18-hole course on the outer tip of Kjalarnes, where the land ends and the North Atlantic begins.',
+      cta1: 'Book Tee Time', cta2: 'Explore Course', scroll: 'Scroll',
+      stats: [
+        { n: '#62', l: 'World Ranking · Golfscape' },
+        { n: '#61', l: 'Europe · GolfWorld' },
+        { n: '18', l: 'Holes · Kjalarnes' },
+      ],
+    },
+    marquee: ['Seaside Links · Kjalarnes', 'Est. 2011', '#62 World · Golfscape', 'Midnight Golf 1 Jun–20 Jul', 'Open 09:00–22:00', '18 Holes on the North Atlantic', '#61 Continental Europe · GolfWorld', '162 Reykjavík'],
+    about: {
+      eyebrow: '02 · The Course',
+      h2: 'Where land', h2em: 'stops.',
+      p1: 'Founded in 2011 and opened in late July 2012, Brautarholt was built on the outer tip of Kjalarnes — a headland reaching into Faxaflói Bay — with the Reykjavík skyline across the water and three sides of open ocean.',
+      p2: 'It is, in every sense, a coastal course. Clifftops, coves, wind-carved fairways, volcanic rock. The North Atlantic is never out of sight, and never out of earshot.',
+      metaRows: [
+        { k: 'Founded', v: '2011', s: 'Opened late July 2012' },
+        { k: 'Address', v: 'Brautarholt 1', s: 'Kjalarnes · 162 Reykjavík' },
+        { k: 'Phone', v: '566 6045', s: 'Mon–Sun · 09:00 – 22:00' },
+        { k: 'Season', v: 'May – September', s: 'Midnight golf · 1 Jun – 20 Jul' },
+      ],
+      caption: '/ The cliff green · Brautarholt · Kjalarnes · Iceland',
+    },
+    architects: {
+      eyebrow: '03 · Design',
+      h2: 'Shaped by', h2em: 'three hands.',
+      cards: [
+        { no: 'A / 01', name: 'Edwin', it: ' Roald', desc: 'Designed the base layout — the foundation of Brautarholt\'s eighteen-hole routing across the Kjalarnes headland.' },
+        { no: 'A / 02', name: 'Michael', it: ' Kelly', desc: 'Shaped the landscape on the opening eleven holes, sculpting the course into its ocean-facing contours and cliff edges.' },
+        { no: 'A / 03', name: 'Tony', it: ' Ristola', desc: 'Designed the final seven holes — the closing stretch where the course returns to the sea and the light holds longest.' },
+      ],
+    },
+    photoBanner: {
+      h2a: 'A course where the', h2em: 'cliff is the hazard.',
+      p: 'Designed by three architects — Edwin Roald, Michael Kelly, and Tony Ristola — each leaving a distinct mark on the landscape.',
+    },
+    awards: {
+      eyebrow: '04 · Recognition',
+      h2a: 'Quietly among', h2em: 'the world\'s best.',
+      card1: { src: 'Golfscape · Global Ranking', denom: 'Among the finest golf courses', denomem: 'in the world.', foot: 'World\'s Top 100 · Golfscape International' },
+      card2: { src: 'GolfWorld · Continental Europe', denom: 'Among the finest courses in', denomem: 'continental Europe.', foot: 'Europe\'s Top 100 · GolfWorld Magazine' },
+    },
+    gallery: {
+      eyebrow: '05 · The Course in Images',
+      h2: 'Eighteen holes on', h2em: 'the edge.',
+      captions: ['/ Aerial view at sunset · Kjalarnes headland', '/ Clifftop green · North Atlantic beyond', '/ Mid-course · Reykjavík skyline across Faxaflói'],
+    },
+    location: {
+      eyebrow: '06 · Getting Here',
+      h2: 'On the outer tip', h2em: 'of Kjalarnes.',
+      body: 'Turn off Vesturlandsvegur at Grundarhverfi and continue out toward the headland. The road narrows. The sky opens. The course appears at the end of the land.',
+      detail1k: 'By Car from Reykjavík',
+      detail1v: '30 minutes north — Vesturlandsvegur, exit Grundarhverfi, then follow signs to Brautarholt 1.',
+      detail2k: 'Coordinates',
+    },
+    hours: [
+      { k: 'Season', big: 'May', big2: '– Sep', note: 'Five full months of coastal golf, from late spring through early autumn.' },
+      { k: 'Daily Hours', big: '09:00', big2: '– 22:00', note: 'Open every day during the season. The coast stays bright.' },
+      { k: 'Why longer', big: 'Sea', big2: ' breeze', note: 'The coastal position keeps the season open longer than most Icelandic courses.' },
+    ],
+    midnight: {
+      eyebrow: '07 · Midnight Golf',
+      h2a: 'Tee off', h2em: 'after midnight.',
+      sub: 'For seven weeks in summer, Iceland\'s sun forgets to set — and you can play a full round beneath a sky that never fully darkens.',
+      facts: [
+        '1 June to 20 July — the midnight golf window.',
+        'At the start and end of the period, darkness falls shortly after midnight.',
+        'In the middle of July, you can play further into the night — the light holds.',
+        'Cloudy weather makes it darker earlier; clear skies extend the daylight.',
+        'Dress warm — it gets cold on the headland late at night.',
+        'We recommend starting at 21:00 and finishing just past midnight.',
+      ],
+      cta: 'Reserve a Midnight Round',
+    },
+    membership: {
+      eyebrow: '08 · Membership',
+      h2: 'Four ways to', h2em: 'belong.',
+      note: 'Each tier includes GSÍ membership and full access to the course for the season, 1 May through 30 September.',
+      tiers: [
+        { name: 'Red', it: ' Membership', tag: 'Entry · 5 Rounds', price: '53.900', inc: '5 rounds card & GSÍ membership.' },
+        { name: 'Green', it: ' Membership', tag: 'Mid · 10 Rounds', price: '89.900', inc: '10 rounds card & GSÍ membership.' },
+        { name: 'Blue', it: ' Membership', tag: 'Premium · 15 Rounds', price: '124.300', inc: '15 rounds card & GSÍ membership.' },
+        { name: 'Full', it: ' Membership', tag: 'Unlimited Season', price: '210.000', inc: 'Unlimited rounds all season. Play as often as you like.', feat: true },
+      ],
+      joinNow: 'Join now', unit: 'ISK · Per Year',
+    },
+    fees: {
+      eyebrow: '09 · Visiting',
+      h2: 'Play for', h2em: 'a day.',
+      note: 'Green fees, carts, clubs and trolleys — all you need to walk onto the first tee on the Kjalarnes coast.',
+      cta: 'Book Online',
+      rows: [
+        { n: 'F1', nm: 'Vallargjald 18 holur', en: 'Green fee · 18 holes', pr: '15.800' },
+        { n: 'F2', nm: 'Vallargjald 12 holur', en: 'Green fee · 12 holes', pr: '12.900' },
+        { n: 'F3', nm: 'Kylfur', en: 'Club rental', pr: '7.000' },
+        { n: 'F4', nm: 'Golfbíll 9 holur', en: 'Golf cart · 9 holes', pr: '6.500' },
+        { n: 'F5', nm: 'Golfbíll 18 holur', en: 'Golf cart · 18 holes', pr: '9.500' },
+        { n: 'F6', nm: 'Kerrur', en: 'Pull trolley', pr: '2.000' },
+      ],
+    },
+    signatureHole: {
+      eyebrow: '10 · Signature Hole',
+      holeNum: '01', holeTitle: 'Hole 1 —', holeTitleEm: 'The Opener',
+      statLabels: { par: 'Par', hcp: 'HCP', yds: 'Yds' },
+      desc: 'Aim for the center of the fairway, short of the three fairway bunkers. Don\'t be tempted into shortcuts on the second shot — if you are short, lay the next shot below the slope. The approach plays left, using the natural contours to feed the ball toward the pin.',
+      navRow: ['Hole 01', 'Hole 02 →', 'All 18 →'],
+    },
+    finalCta: {
+      eyebrow: '11 · Come play',
+      h2a: 'Play on the', h2em: 'North Atlantic.',
+      sub: 'Experience one of Europe\'s most remarkable coastal courses — open daily from 1 May through 30 September. Midnight rounds available 1 June to 20 July.',
+      cta1: 'Book Tee Time', cta2: 'View Memberships', cta3: 'Call 566 6045',
+    },
+    footer: {
+      desc: 'A seaside 18-hole course on the outer tip of Kjalarnes, open each year from 1 May through 30 September.',
+      visit: { title: 'Visit', lines: ['Brautarholt 1', 'Kjalarnes', '162 Reykjavík', 'Iceland'] },
+      contact: { title: 'Contact', lines: ['566 6045', 'info@brautarholt.is', '09:00 – 22:00 daily'] },
+      explore: { title: 'Explore', links: [['The Course', '#about'], ['Midnight Golf', '#midnight'], ['Memberships', '#membership'], ['Green Fees', '#fees']] },
+      copy: '© Golfklúbbur Brautarholt · {year}',
+      coords: 'N 64°14′ · W 21°49′',
+      est: 'Est. 2011 · Kjalarnes · Iceland',
+    },
+    booking: {
+      title: 'Book your', titleEm: 'tee time.',
+      tag: 'N 64°14′ · Brautarholt, Kjalarnes',
+      dateLabel: 'Date',
+      playersLabel: 'Players',
+      playerOptions: ['1 player', '2 players', '3 players', '4 players'],
+      teeLabel: 'Tee Time',
+      holesLabel: 'Holes',
+      holeOptions: ['18 holes', '12 holes', '9 holes'],
+      nameLabel: 'Name',
+      contactLabel: 'Phone or Email',
+      contactPlaceholder: '566 6045 or email',
+      submit: 'Confirm Reservation',
+      note: 'Or call directly · 566 6045 · 09:00 – 22:00',
+    },
+  },
+}
+
+const LanguageContext = createContext()
+
+export function LanguageProvider({ children }) {
+  const [lang, setLang] = useState('is')
+  return (
+    <LanguageContext.Provider value={{ lang, setLang, t: translations[lang] }}>
+      {children}
+    </LanguageContext.Provider>
+  )
+}
+
+export function useLanguage() {
+  return useContext(LanguageContext)
+}
