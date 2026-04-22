@@ -67,7 +67,7 @@ export default function Navbar({ onNavigate, currentPage, onBook }) {
           </button>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        <div className="nav-mobile-controls" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <div className="lang-toggle" style={{ display: 'none' }} id="mobile-lang">
             <button onClick={() => setLang('is')} className={`lang-btn ${lang === 'is' ? 'active' : ''}`}>🇮🇸</button>
             <button onClick={() => setLang('en')} className={`lang-btn ${lang === 'en' ? 'active' : ''}`}>🇬🇧</button>

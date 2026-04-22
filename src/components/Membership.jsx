@@ -1,6 +1,6 @@
 import { useLanguage } from '../LanguageContext'
 
-export default function Membership() {
+export default function Membership({ onJoin }) {
   const { t } = useLanguage()
   const m = t.membership
 
@@ -16,7 +16,12 @@ export default function Membership() {
         </div>
         <div className="mem-grid">
           {m.tiers.map((tier, i) => (
-            <div className={`mem-card${tier.feat ? ' feat' : ''} reveal d${i}`} key={i}>
+            <div
+              className={`mem-card${tier.feat ? ' feat' : ''} reveal d${i}`}
+              key={i}
+              onClick={() => onJoin && onJoin(tier)}
+              style={{ cursor: 'pointer' }}
+            >
               <div className="mem-sub">{tier.tag}</div>
               <div className="mem-name">{tier.name}<em>{tier.it}</em></div>
               <div className="mem-inc">{tier.inc}</div>

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useLanguage } from '../LanguageContext'
 
-// Tees: [blue(championship), white(medal), yellow(forward), red(ladies)]
+// Tees: [white(championship), yellow(medal), blue(forward), red(ladies)]
 const holes = [
   { number: 1,  par: 4, hcp: 5,  tees: [385, 360, 330, 295],
     tip_is: 'Míðaðu á miðju fairway, stutt af þremur fairway-bunkerum. Vertu ekki freistuð af skammhlaupi á öðrum skotinu — ef þú ert stuttur, leggðu næsta skot niður undir brekku. Hlaupið spilar til vinstri og nýtir náttúrulegar útlínur til að fæða boltann að pinnanum.',
@@ -59,7 +59,7 @@ const holes = [
     tip_en: 'A fitting finale. The right side of the fairway gives the best angle into the green. The fairway narrows significantly on your second shot — stay disciplined.' },
 ]
 
-const TEE_COLORS = ['#4A90D9', '#E8E8E8', '#E8C84A', '#D94A4A']
+const TEE_COLORS = ['#E8E8E8', '#E8C84A', '#4A90D9', '#D94A4A']
 
 const parColor = (par) => par === 3 ? 'p3' : par === 5 ? 'p5' : ''
 
@@ -77,8 +77,8 @@ export default function SignatureHole() {
   const tipLabel = is ? 'Leikráð' : 'Playing Strategy'
   const holeWord = is ? 'Hola' : 'Hole'
   const teeNames = is
-    ? ['Blár · Meistarar', 'Hvítur · Medal', 'Gulur · Framur', 'Rauður']
-    : ['Blue · Championship', 'White · Medal', 'Yellow · Forward', 'Red']
+    ? ['Hvítur · Meistarar', 'Gulur · Medal', 'Blár · Framur', 'Rauður']
+    : ['White · Championship', 'Yellow · Medal', 'Blue · Forward', 'Red']
 
   return (
     <section className="hole-section" id="course">

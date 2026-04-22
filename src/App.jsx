@@ -17,6 +17,7 @@ import SignatureHole from './components/SignatureHole'
 import FinalCTA from './components/FinalCTA'
 import Footer from './components/Footer'
 import BookingModal from './components/BookingModal'
+import PaymentModal from './components/PaymentModal'
 
 function Cursor() {
   const dotRef = useRef()
@@ -92,8 +93,45 @@ function RevealObserver() {
   return null
 }
 
+function PaymentReturn() {
+  const params = new URLSearchParams(window.location.search)
+  const status = params.get('payment')
+  const [visible, setVisible] = useState(!!status)
+
+  useEffect(() => {
+    if (status) {
+      window.history.replaceState({}, '', window.location.pathname)
+    }
+  }, [status])
+
+  if (!visible) return null
+
+  return (
+    <div className="modal-overlay open" onClick={() => setVisible(false)}>
+      <div className="modal-backdrop" />
+      <div className="modal-box" role="dialog" aria-modal="true" style={{ textAlign: 'center', padding: '3rem 2rem' }}>
+        <button className="modal-close" onClick={() => setVisible(false)} aria-label="Close" />
+        {status === 'success' ? (
+          <>
+            <div style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>✓</div>
+            <h2 className="modal-title">Greiðsla <em>staðfest.</em></h2>
+            <p style={{ marginTop: '1rem', opacity: 0.6 }}>Velkomin í Brautarholt. Staðfesting verður send á netfangið þitt.</p>
+          </>
+        ) : (
+          <>
+            <div style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>✕</div>
+            <h2 className="modal-title">Greiðslu <em>aflýst.</em></h2>
+            <p style={{ marginTop: '1rem', opacity: 0.6 }}>Engin greiðsla var tekin. Þú getur reynt aftur hvenær sem er.</p>
+          </>
+        )}
+      </div>
+    </div>
+  )
+}
+
 export default function App() {
   const [bookingOpen, setBookingOpen] = useState(false)
+  const [paymentTier, setPaymentTier] = useState(null)
 
   return (
     <LanguageProvider>
@@ -112,13 +150,19 @@ export default function App() {
         <Location />
         <Hours />
         <Midnight />
-        <Membership />
+        <Membership onJoin={(tier) => setPaymentTier(tier)} />
         <Fees onBook={() => setBookingOpen(true)} />
         <SignatureHole />
         <FinalCTA onBook={() => setBookingOpen(true)} />
       </main>
       <Footer />
+      <PaymentReturn />
       <BookingModal open={bookingOpen} onClose={() => setBookingOpen(false)} />
+      <PaymentModal
+        open={!!paymentTier}
+        tier={paymentTier}
+        onClose={() => setPaymentTier(null)}
+      />
     </LanguageProvider>
   )
 }
